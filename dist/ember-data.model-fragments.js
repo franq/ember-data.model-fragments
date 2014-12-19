@@ -58,7 +58,7 @@ var define, requireModule, require, requirejs;
   };
 })();
 
-define("core-model", 
+define("core-model",
   ["ember","./model","exports"],
   function(__dependency1__, __dependency2__, __exports__) {
     "use strict";
@@ -77,6 +77,7 @@ define("core-model",
     var protoProps = [
       '_setup',
       '_unhandledEvent',
+      '_notifyProperties',
       'send',
       'transitionTo',
       'data',
@@ -126,13 +127,13 @@ define("core-model",
 
     __exports__["default"] = CoreModel;
   });
-define("ember", 
+define("ember",
   ["exports"],
   function(__exports__) {
     "use strict";
     __exports__["default"] = Ember;
   });
-define("fragments/array/fragment", 
+define("fragments/array/fragment",
   ["ember","./stateful","../model","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
     "use strict";
@@ -350,7 +351,7 @@ define("fragments/array/fragment",
 
     __exports__["default"] = FragmentArray;
   });
-define("fragments/array/stateful", 
+define("fragments/array/stateful",
   ["ember","exports"],
   function(__dependency1__, __exports__) {
     "use strict";
@@ -495,7 +496,7 @@ define("fragments/array/stateful",
 
     __exports__["default"] = StatefulArray;
   });
-define("fragments/attributes", 
+define("fragments/attributes",
   ["ember","./array/stateful","./array/fragment","./model","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __exports__) {
     "use strict";
@@ -593,7 +594,7 @@ define("fragments/attributes",
         }
 
         return this._fragments[key] = fragment;
-      }).property('data').meta(meta);
+      }).property('isDirty').meta(meta);
     }
 
     /**
@@ -695,7 +696,7 @@ define("fragments/attributes",
         }
 
         return this._fragments[key] = fragments;
-      }).property('data').meta(meta);
+      }).property('isDirty').meta(meta);
     }
 
     // Like `DS.belongsTo`, when used within a model fragment is a reference
@@ -752,7 +753,7 @@ define("fragments/attributes",
     __exports__.hasManyFragments = hasManyFragments;
     __exports__.fragmentOwner = fragmentOwner;
   });
-define("fragments/ext", 
+define("fragments/ext",
   ["../store","../model","exports"],
   function(__dependency1__, __dependency2__, __exports__) {
     "use strict";
@@ -993,7 +994,7 @@ define("fragments/ext",
     __exports__.Store = Store;
     __exports__.Model = Model;
   });
-define("fragments/model", 
+define("fragments/model",
   ["ember","../core-model","./states","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
     "use strict";
@@ -1113,7 +1114,7 @@ define("fragments/model",
         this.send('pushedData');
 
         // Notify attribute properties/observers of internal change to `_data`
-        this.notifyPropertyChange('data');
+        this._notifyProperties(Em.keys(this._data));
       },
 
       /**
@@ -1143,7 +1144,7 @@ define("fragments/model",
         this.send('rolledBack');
 
         // Notify attribute properties/observers of internal change to `_data`
-        this.notifyPropertyChange('data');
+        this._notifyProperties(Em.keys(this._data));
       },
 
       /**
@@ -1235,7 +1236,7 @@ define("fragments/model",
     __exports__["default"] = ModelFragment;
     __exports__.getActualFragmentType = getActualFragmentType;
   });
-define("fragments/states", 
+define("fragments/states",
   ["ember","../states","exports"],
   function(__dependency1__, __dependency2__, __exports__) {
     "use strict";
@@ -1392,7 +1393,7 @@ define("fragments/states",
 
     __exports__["default"] = FragmentRootState;
   });
-define("fragments/transform", 
+define("fragments/transform",
   ["../transform","exports"],
   function(__dependency1__, __exports__) {
     "use strict";
@@ -1424,7 +1425,7 @@ define("fragments/transform",
 
     __exports__["default"] = FragmentTransform;
   });
-define("initializers", 
+define("initializers",
   ["./fragments/transform","exports"],
   function(__dependency1__, __exports__) {
     "use strict";
@@ -1443,7 +1444,7 @@ define("initializers",
 
     __exports__["default"] = initializers;
   });
-define("main", 
+define("main",
   ["ember","./fragments/ext","./fragments/model","./fragments/array/fragment","./fragments/transform","./fragments/attributes","./initializers","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __exports__) {
     "use strict";
@@ -1482,25 +1483,25 @@ define("main",
     // Something must be exported...
     __exports__["default"] = DS;
   });
-define("model", 
+define("model",
   ["exports"],
   function(__exports__) {
     "use strict";
     __exports__["default"] = DS.Model;
   });
-define("states", 
+define("states",
   ["exports"],
   function(__exports__) {
     "use strict";
     __exports__["default"] = DS.RootState;
   });
-define("store", 
+define("store",
   ["exports"],
   function(__exports__) {
     "use strict";
     __exports__["default"] = DS.Store;
   });
-define("transform", 
+define("transform",
   ["exports"],
   function(__exports__) {
     "use strict";
